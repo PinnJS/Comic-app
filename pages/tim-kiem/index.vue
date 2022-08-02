@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
-import { useDebounce } from '@vueuse/core'
+// import { useDebounce } from '@vueuse/core'
 import type { Comic } from '~/types'
 import useNavigatorComicPreview from '~/composables/useNavigatorComicPreview'
 import { convertUnit } from '~/common'
 
 const refInput = ref('')
-const debounced = useDebounce(refInput, 200)
+// const debounced = useDebounce(refInput, 200)
 const searchData = ref<Comic[]>([])
 const loading = ref(true)
 
@@ -31,7 +31,7 @@ watchEffect(async () => {
   try {
     searchData.value = await $fetch('/api/comic/search', {
       params: {
-        q: debounced.value,
+        q: refInput.value,
       },
     })
 
@@ -54,10 +54,8 @@ watchEffect(async () => {
           <img src="/icons/searchPage/icon-search.svg" alt="">
         </div>
         <input v-model="refInput" class="search-input" placeholder="Nhập nội dung tìm kiếm...">
-        <img
-          v-if="refInput.length > 0" class="w-8 h-8 text-primary-gray absolute right-5 top-2.5"
-          src="/icons/searchPage/icon-close.svg" alt="" @click="clearInput"
-        >
+        <img v-if="refInput.length > 0" class="w-8 h-8 text-primary-gray absolute right-5 top-2.5"
+          src="/icons/searchPage/icon-close.svg" alt="" @click="clearInput">
       </div>
     </div>
     <section class="bg-white h-[calc(100vh_-_44px)] overflow-auto scrollbar-hide">
@@ -65,7 +63,8 @@ watchEffect(async () => {
         #Từ khoá Hot
       </h2>
       <div class="flex flex-wrap px-5">
-        <span v-for="comicName in comicNameSuggestion" :key="comicName" v-memo="comicNameSuggestion" class="search-hotkey mx-4 my-2" @click="refInput = comicName">
+        <span v-for="comicName in comicNameSuggestion" :key="comicName" v-memo="comicNameSuggestion"
+          class="search-hotkey mx-4 my-2" @click="refInput = comicName">
           {{ comicName }}
         </span>
       </div>
@@ -73,16 +72,13 @@ watchEffect(async () => {
         Truyện tranh ({{ searchData.length ? searchData.length : 0 }})
       </h2>
       <CommonSearchLoading v-if="loading" class="w-16 h-16" />
-      <div v-if="searchData && searchData.length > 0 && !loading" class="result grid grid-cols-1 md:grid-cols-2 overflow-y-scroll scrollbar-hide">
+      <div v-if="searchData && searchData.length > 0 && !loading"
+        class="result grid grid-cols-1 md:grid-cols-2 overflow-y-scroll scrollbar-hide">
         <div v-for="comic in searchData" :key="comic._id" class="p-4 col-span-1">
           <NuxtLink class="flex items-center" :to="useNavigatorComicPreview(comic.slug, comic._id)">
             <div class="relative">
-              <SharedMeeToonImg
-                :width="75"
-                :height="100"
-                class="rounded-xl w-[75px] h-[100px] object-cover"
-                :src="comic.verticalLogo"
-              />
+              <SharedMeeToonImg :width="75" :height="100" class="rounded-xl w-[75px] h-[100px] object-cover"
+                :src="comic.verticalLogo" />
             </div>
             <div class="px-5" style="width: calc(100% - 102px)">
               <h3 class="text-xl font-semibold line-clamp-1 mb-1">

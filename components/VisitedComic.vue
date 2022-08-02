@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import { useStorage } from '@vueuse/core'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { keys } from '~/types'
@@ -58,4 +58,4 @@ const visitedComics: any = await useStorage(keys.visitedComics, {
       </Swiper>
     </div>
   </ClientOnly>
-</template>
+</template> -->
